@@ -1,0 +1,38 @@
+- **Create RDS DB**
+    
+    
+    - **EKS VPC 및 서브넷 확인**:
+        - EKS 클러스터가 사용하는 VPC와 그에 포함된 프라이빗 서브넷을 검토했습니다. RDS 데이터베이스는 이 프라이빗 서브넷에 배치됩니다.
+            - VPC 내의 프라이빗 서브넷에 우리가 RDS 데이터베이스를 생성할 것이기 때문
+    - **RDS 보안 그룹 생성**:
+        - RDS 데이터베이스에 접근할 수 있도록 포트 3306을 허용하는 보안 그룹을 EC2에서 생성
+        - MySQL의 기본 포트 3306을 열어 모든 네트워크에서 접근할 수 있도록 설정
+        - Security group name: eks_rds_db_sg
+        - Description: Allow access for RDS Database on Port 3306
+        - VPC: eksctl-eksdemo1-cluster/VPC
+        - **Inbound Rules**
+            - Type: MySQL/Aurora
+            - Protocol: TPC
+            - Port: 3306
+            - Source: Anywhere (0.0.0.0/0)
+            - Description: Allow access for RDS Database on Port 3306
+        - **Outbound Rules**
+            - Leave to defaults
+    - **DB 서브넷 그룹 생성**:
+        - RDS에서 DB 서브넷 그룹을 생성하여 US East 1A와 1B의 프라이빗 서브넷을 포함했습니다.
+        - **Name:** eks-rds-db-subnetgroup
+        - **Description:** EKS RDS DB Subnet Group
+        - **VPC:** eksctl-eksdemo1-cluster/VPC
+        - **Availability Zones:** ap-southeast-2a, ap-southeast-2c
+        - **Subnets:** 2 subnets in 2 AZs
+    - **RDS 데이터베이스 생성**:
+        - **생성 방식**: 표준 생성 방식을 사용하여 MySQL 데이터베이스를 생성했습니다.
+        - **버전 및 티어**: 무료 티어를 선택하고, MySQL의 최신 버전을 사용했습니다.
+        - **DB 인스턴스 설정**: 인스턴스 식별자를 'user MGMT db'로 설정하고, 마스터 사용자 이름을 'DB admin', 비밀번호를 'DB password 11'로 설정했습니다.
+        - **인스턴스 크기**: T2 micro를 선택하고, 저장소를 20GB로 설정했습니다.
+        - **VPC 및 서브넷 그룹**: EKS CTL VPC와 EKS RDS DB 서브넷 그룹을 선택하여 프라이빗 서브넷에 배치했습니다.
+        - **보안 그룹**: 이전에 생성한 DB 보안 그룹을 사용했습니다.
+        - **기본 보안 그룹 제거**: 기본 보안 그룹을 제거하고, EKS RDS DB 보안 그룹만 선택했습니다.
+        - **데이터베이스 스키마**: 초기 데이터베이스 스키마를 'user MGMT'로 설정했습니다.
+    - **후속 작업**:
+        - 데이터베이스가 생성되면, RDS 데이터베이스의 엔드포인트를 찾고 Kubernetes 클러스터의 외부 이름 서비스에 구성하여 애플리케이션이 이 데이터베이스에 연결할 수 있도록 합니다.
