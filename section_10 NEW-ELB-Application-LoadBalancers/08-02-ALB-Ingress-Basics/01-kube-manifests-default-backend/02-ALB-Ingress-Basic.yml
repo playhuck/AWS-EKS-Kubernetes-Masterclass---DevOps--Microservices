@@ -1,5 +1,5 @@
 # Annotations Reference: https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/guide/ingress/annotations/
-apiVersion: networking.k8s.io/v1
+apiVersion: networking.k8s.io/v1 # api version
 kind: Ingress
 metadata:
   name: ingress-nginxapp1
@@ -7,10 +7,10 @@ metadata:
     app: app1-nginx
   annotations:
     # Load Balancer Name
-    alb.ingress.kubernetes.io/load-balancer-name: app1ingress
+    alb.ingress.kubernetes.io/load-balancer-name: app1ingress # lb name
     #kubernetes.io/ingress.class: "alb" (OLD INGRESS CLASS NOTATION - STILL WORKS BUT RECOMMENDED TO USE IngressClass Resource) # Additional Notes: https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.3/guide/ingress/ingress_class/#deprecated-kubernetesioingressclass-annotation
     # Ingress Core Settings
-    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/scheme: internet-facing # lb가 인터넷을 향하는 지 내부용인지 정의
     # Health Check Settings
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP 
     alb.ingress.kubernetes.io/healthcheck-port: traffic-port

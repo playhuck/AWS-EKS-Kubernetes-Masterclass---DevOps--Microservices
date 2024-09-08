@@ -16,7 +16,7 @@ metadata:
   labels:
     app: app1-nginx
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: externaldns-k8s-service-demo101.stacksimplify.com
+    external-dns.alpha.kubernetes.io/hostname: externaldns-k8s-service-demo101.developerlay.com
 spec:
   type: LoadBalancer
   selector:
